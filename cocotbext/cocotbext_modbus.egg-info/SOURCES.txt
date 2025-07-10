@@ -1,0 +1,8 @@
+README.md
+setup.py
+cocotbext_modbus.egg-info/PKG-INFO
+cocotbext_modbus.egg-info/SOURCES.txt
+cocotbext_modbus.egg-info/dependency_links.txt
+cocotbext_modbus.egg-info/not-zip-safe
+cocotbext_modbus.egg-info/requires.txt
+cocotbext_modbus.egg-info/top_level.txt

@@ -1,0 +1,50 @@
+import os
+import xml.etree.ElementTree as ET
+from datetime import datetime
+
+RESULTS_XML = "results.xml"
+REPORT_DIR = "test_reports"
+REPORT_FILE = os.path.join(REPORT_DIR, "test_report.txt")
+
+def parse_results(xml_file):
+    tests = []
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    for testcase in root.iter("testcase"):
+        name = testcase.attrib["name"]
+        classname = testcase.attrib["classname"]
+        time = testcase.attrib["time"]
+        status = "PASS"
+        if testcase.find("failure") is not None:
+            status = "FAIL"
+        elif testcase.find("skipped") is not None:
+            status = "SKIP"
+        tests.append((classname, name, status, time))
+    return tests
+
+def generate_report(tests):
+    os.makedirs(REPORT_DIR, exist_ok=True)
+    with open(REPORT_FILE, "w") as f:
+        f.write(f"Test Report - Generated on {datetime.now()}\n")
+        f.write("="*60 + "\n")
+        for classname, name, status, time in tests:
+            f.write(f"Module: {classname}\n")
+            f.write(f"  Test: {name}\n")
+            f.write(f"  Status: {status}\n")
+            f.write(f"  Time: {time}s\n")
+            f.write("-"*60 + "\n")
+        passed = sum(1 for t in tests if t[2] == "PASS")
+        failed = sum(1 for t in tests if t[2] == "FAIL")
+        skipped = sum(1 for t in tests if t[2] == "SKIP")
+        total = len(tests)
+        f.write(f"Summary:\n")
+        f.write(f"  Total: {total}, Passed: {passed}, Failed: {failed}, Skipped: {skipped}\n")
+
+if __name__ == "__main__":
+    if not os.path.exists(RESULTS_XML):
+        print(f"Error: {RESULTS_XML} not found. Run your test with `make` first.")
+    else:
+        tests = parse_results(RESULTS_XML)
+        generate_report(tests)
+        print(f"Test report generated at: {REPORT_FILE}")
+
