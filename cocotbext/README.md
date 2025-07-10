@@ -38,8 +38,8 @@ cocotbext-modbus/
 ├── requirements.txt               # Python dependencies
 ├── generate_test_report.py        # XML → TXT/HTML report generator
 └── test_reports/                  # Auto-generated test reports
-
-#Design Under Test (DUT): tlvhpd1250.v
+**
+# cocotbext-MODBUS-RTU
 
 The included sample DUT (tlvhpd1250.v) represents a simple MODBUS RTU loopback interface. It echoes transmitted tx_data on the rx_data output when both tx_enable and rx_enable are active. This behavior is ideal for validating the correctness of transmitted and received frames, and it helps demonstrate:
 
@@ -93,7 +93,7 @@ Includes:
 
     Function code coverage summary
 
-📄 License
+## License
 
 This project is licensed under the MIT License.
 
