@@ -1,69 +1,101 @@
- #cocotbext-MODBUS-RTU 
+# cocotbext-MODBUS-RTU
 
-A modular and reusable Verification IP (VIP) for verifying MODBUS RTU protocol implementations using the [cocotb](https://github.com/cocotb/cocotb) Python-based verification framework. This VIP includes drivers, monitors, scoreboards, and coverage components to simulate and verify MODBUS RTU communication at the byte and CRC level.
+A modular and reusable Verification IP (VIP) for verifying **MODBUS RTU** protocol implementations using the [cocotb](https://github.com/cocotb/cocotb) Python-based verification framework.
 
----
-
-#Key Features
-
-- **MODBUS RTU Transaction Modeling**: Supports frame construction, CRC calculation, and transmission.
-- **Driver & Monitor**: Simulates master behavior and observes responses from the DUT.
-- **Scoreboard**: Validates received frames against expected results.
-- **Error Checker**: Performs CRC integrity checks and logs mismatches.
-- **Functional Coverage**: Tracks usage of MODBUS function codes.
-- **Modular Structure**: Easy to plug-and-play with different MODBUS DUTs.
+This VIP provides high-level drivers, monitors, scoreboards, error detection, and functional coverage to validate MODBUS RTU communication transactions at the byte and CRC level.
 
 ---
 
-#Directory Structure
+##  Key Features
+
+- **MODBUS RTU Frame Modeling** — Constructs valid MODBUS frames including CRC-16.
+- **Driver & Monitor** — Simulates master frame generation and captures responses.
+- **Scoreboard** — Compares expected and received frames for validation.
+- **Error Checker** — Performs CRC integrity checks.
+- **Coverage Collector** — Tracks usage frequency of function codes.
+- **Modular VIP Architecture** — Easily reusable across projects.
+
+---
+
+##  Directory Structure
 
 ```bash
 cocotbext-modbus/
 ├── cocotbext/
 │   └── modbus/
-│       ├── modbus_driver.py       # MODBUS RTU Driver
-│       ├── modbus_monitor.py      # MODBUS RTU Monitor
-│       ├── modbus_scoreboard.py   # Scoreboard for frame comparison
-│       ├── modbus_coverage.py     # Coverage tracking
-│       ├── modbus_rtu.py          # CRC + Frame generator
-│       ├── error_handling.py      # CRC validator
-│       └── modbus_bus.py          # Signal abstraction (optional)
+│       ├── modbus_driver.py       # Frame generator & transmitter
+│       ├── modbus_monitor.py      # Frame receiver & logger
+│       ├── modbus_scoreboard.py   # Frame comparison logic
+│       ├── modbus_coverage.py     # Tracks function code usage
+│       ├── modbus_rtu.py          # CRC & frame utilities
+│       ├── error_handling.py      # CRC validation module
+│       └── modbus_bus.py          # Optional DUT signal abstraction
 ├── sim/
-│   └── tlvhpd1250.v               # Example DUT: Simple loopback interface
+│   └── tlvhpd1250.v               # Sample Verilog DUT (loopback)
 ├── tb/
-│   └── test_modbus_advanced.py    # Top-level test integrating all VIP components
-├── Makefile                       # cocotb Makefile
-├── results.xml                    # Test results file (generated)
-└── test_reports/                  # Generated test reports (text & HTML)
+│   └── test_modbus_advanced.py    # Integrated test with all VIP components
+├── Makefile                       # Build & simulate using Icarus Verilog
+├── requirements.txt               # Python dependencies
+├── generate_test_report.py        # XML → TXT/HTML report generator
+└── test_reports/                  # Auto-generated test reports
 
-# Design Under Test (DUT)
+#Design Under Test (DUT): tlvhpd1250.v
 
-The VIP has been validated with a sample Verilog module tlvhpd1250.v, which emulates a simple MODBUS loopback mechanism. This DUT mirrors transmitted frames onto the receiver path, providing a controlled environment to evaluate the VIP's correctness in framing, CRC checking, and coverage.
+The included sample DUT (tlvhpd1250.v) represents a simple MODBUS RTU loopback interface. It echoes transmitted tx_data on the rx_data output when both tx_enable and rx_enable are active. This behavior is ideal for validating the correctness of transmitted and received frames, and it helps demonstrate:
 
-Although this DUT is illustrative, the VIP is agnostic to DUT internals and can be adapted to industrial MODBUS IPs.
- How to Run
+    Correct frame structure
 
-Ensure cocotb, Icarus Verilog, and Python 3.10+ are installed in your environment.
+    Accurate CRC generation/validation
 
+    Clean RX/TX signal interaction
+
+#How to Run the Test
+Prerequisites
+
+Ensure the following tools are installed:
+
+    Python 3.10+
+
+    cocotb (≥1.7)
+
+    Icarus Verilog (iverilog)
+
+    pip dependencies from requirements.txt
+
+#Steps to Simulate
+
+# Step 1: Install dependencies
+pip install -r requirements.txt
+
+# Step 2: Run the cocotb test
 make MODULE=tb.test_modbus_advanced
 
-#To generate the test report after simulation:
+#Generate Test Reports
 
 python generate_test_report.py
 
-HTML and TXT reports will be created under the test_reports/ directory.
+After simulation, detailed results (status, timing, CRC errors, function code coverage) will be saved under:
 
-#Sample Test Report
+    test_reports/test_report.txt
 
-Test and coverage results are saved automatically after simulation.
+    test_reports/test_report.html
 
-Report Preview:
- Click to View HTML Report
-#License
+You can open the HTML file in any browser.
+# Sample Report
+
+Includes:
+
+    Status of all test cases
+
+    Frame match results
+
+    CRC validation
+
+    Function code coverage summary
+
+📄 License
 
 This project is licensed under the MIT License.
-# Acknowledgements
 
-Vijayvithal Jahagirdar: for mentoring and providing guidance throughout the development process
-
-   
+#Acknowledgements
+Mentor: Vijayvithal Jahagirdar
