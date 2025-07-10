@@ -98,5 +98,4 @@ License
 
 This project is distributed under the MIT License.
 Acknowledgements
-
-@Vijayvithal Jahagirdar.
+[VijayvithaljahaGIRDAR](https://github.com/jahagirdar)
