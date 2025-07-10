@@ -39,7 +39,7 @@ cocotbext-modbus/
 ├── generate_test_report.py        # XML → TXT/HTML report generator
 └── test_reports/                  # Auto-generated test reports
 **
-# cocotbext-MODBUS-RTU
+## cocotbext-MODBUS-RTU
 
 The included sample DUT (tlvhpd1250.v) represents a simple MODBUS RTU loopback interface. It echoes transmitted tx_data on the rx_data output when both tx_enable and rx_enable are active. This behavior is ideal for validating the correctness of transmitted and received frames, and it helps demonstrate:
 
@@ -49,7 +49,7 @@ The included sample DUT (tlvhpd1250.v) represents a simple MODBUS RTU loopback i
 
     Clean RX/TX signal interaction
 
-#How to Run the Test
+## How to Run the Test
 Prerequisites
 
 Ensure the following tools are installed:
@@ -62,7 +62,7 @@ Ensure the following tools are installed:
 
     pip dependencies from requirements.txt
 
-#Steps to Simulate
+## Steps to Simulate
 
 # Step 1: Install dependencies
 pip install -r requirements.txt
@@ -70,7 +70,7 @@ pip install -r requirements.txt
 # Step 2: Run the cocotb test
 make MODULE=tb.test_modbus_advanced
 
-#Generate Test Reports
+## Generate Test Reports
 
 python generate_test_report.py
 
@@ -81,7 +81,7 @@ After simulation, detailed results (status, timing, CRC errors, function code co
     test_reports/test_report.html
 
 You can open the HTML file in any browser.
-# Sample Report
+## Sample Report
 
 Includes:
 
