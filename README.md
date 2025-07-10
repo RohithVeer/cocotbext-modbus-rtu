@@ -12,27 +12,27 @@ Key Features
     Coverage Collector — Tracks usage frequency of function codes.
     Modular VIP Architecture — Easily reusable across projects.
 
-Directory Structure
+## Directory Structure
 
 cocotbext-modbus/
 ├── cocotbext/
-│   └── modbus/
-│       ├── modbus_driver.py       # Frame generator & transmitter
-│       ├── modbus_monitor.py      # Frame receiver & logger
-│       ├── modbus_scoreboard.py   # Frame comparison logic
-│       ├── modbus_coverage.py     # Tracks function code usage
-│       ├── modbus_rtu.py          # CRC & frame utilities
-│       ├── error_handling.py      # CRC validation module
-│       └── modbus_bus.py          # Optional DUT signal abstraction
+│ └── modbus/
+│ ├── modbus_driver.py # MODBUS RTU Driver
+│ ├── modbus_monitor.py # MODBUS RTU Monitor
+│ ├── modbus_scoreboard.py # Scoreboard for frame comparison
+│ ├── modbus_coverage.py # Coverage tracking
+│ ├── modbus_rtu.py # CRC + Frame generator
+│ ├── error_handling.py # CRC validator
+│ └── modbus_bus.py # Signal abstraction (optional)
 ├── sim/
-│   └── tlvhpd1250.v               # Sample Verilog DUT (loopback)
+│ └── tlvhpd1250.v # Example DUT: Simple loopback interface
 ├── tb/
-│   └── test_modbus_advanced.py    # Integrated test with all VIP components
-├── Makefile                       # Build & simulate using Icarus Verilog
-├── requirements.txt               # Python dependencies
-├── generate_test_report.py        # XML → TXT/HTML report generator
-└── test_reports/                  # Auto-generated test reports
-**
+│ └── test_modbus_advanced.py # Top-level test integrating all VIP components
+├── Makefile # cocotb Makefile
+├── generate_test_report.py # Report generation script
+└── test_reports/ # Auto-generated test reports (HTML & TXT)
+
+
 ## cocotbext-MODBUS-RTU
 
 The included sample DUT (tlvhpd1250.v) represents a simple MODBUS RTU loopback interface. It echoes transmitted tx_data on the rx_data output when both tx_enable and rx_enable are active. This behavior is ideal for validating the correctness of transmitted and received frames, and it helps demonstrate:
