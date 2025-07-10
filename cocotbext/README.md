@@ -1,101 +1,85 @@
 # cocotbext-MODBUS-RTU
 
-A modular and reusable Verification IP (VIP) for verifying **MODBUS RTU** protocol implementations using the [cocotb](https://github.com/cocotb/cocotb) Python-based verification framework.
-
-This VIP provides high-level drivers, monitors, scoreboards, error detection, and functional coverage to validate MODBUS RTU communication transactions at the byte and CRC level.
+A reusable **Verification IP (VIP)** for testing **MODBUS RTU protocol** using the [Cocotb](https://github.com/cocotb/cocotb) framework. This VIP provides a full suite including driver, monitor, scoreboard, CRC checker, and functional coverage to validate MODBUS RTU communication.
 
 ---
 
-##  Key Features
+## ✅ What This VIP Does
 
-- **MODBUS RTU Frame Modeling** — Constructs valid MODBUS frames including CRC-16.
-- **Driver & Monitor** — Simulates master frame generation and captures responses.
-- **Scoreboard** — Compares expected and received frames for validation.
-- **Error Checker** — Performs CRC integrity checks.
-- **Coverage Collector** — Tracks usage frequency of function codes.
-- **Modular VIP Architecture** — Easily reusable across projects.
+- Sends and receives MODBUS RTU frames
+- Checks CRC correctness
+- Compares actual vs expected results
+- Tracks which MODBUS functions are used
+- Supports integration with any MODBUS-compliant DUT
 
 ---
 
-##  Directory Structure
+## 📁 Project Structure
 
-```bash
 cocotbext-modbus/
-├── cocotbext/
-│   └── modbus/
-│       ├── modbus_driver.py       # Frame generator & transmitter
-│       ├── modbus_monitor.py      # Frame receiver & logger
-│       ├── modbus_scoreboard.py   # Frame comparison logic
-│       ├── modbus_coverage.py     # Tracks function code usage
-│       ├── modbus_rtu.py          # CRC & frame utilities
-│       ├── error_handling.py      # CRC validation module
-│       └── modbus_bus.py          # Optional DUT signal abstraction
-├── sim/
-│   └── tlvhpd1250.v               # Sample Verilog DUT (loopback)
-├── tb/
-│   └── test_modbus_advanced.py    # Integrated test with all VIP components
-├── Makefile                       # Build & simulate using Icarus Verilog
-├── requirements.txt               # Python dependencies
-├── generate_test_report.py        # XML → TXT/HTML report generator
-└── test_reports/                  # Auto-generated test reports
+├── cocotbext/modbus/ # VIP modules
+│ ├── modbus_driver.py # Sends frames
+│ ├── modbus_monitor.py # Captures DUT output
+│ ├── modbus_scoreboard.py # Verifies results
+│ ├── modbus_coverage.py # Logs function code usage
+│ ├── modbus_rtu.py # Frame + CRC generator
+│ ├── error_handling.py # Checks CRC integrity
+│ └── modbus_bus.py # Signal abstraction
+├── sim/tlvhpd1250.v # Example DUT (loopback)
+├── tb/test_modbus_advanced.py# Main test case
+├── generate_test_report.py # Report generator
+├── test_reports/ # Stores HTML + text reports
+└── Makefile # Build + simulate
 
-#Design Under Test (DUT): tlvhpd1250.v
 
-The included sample DUT (tlvhpd1250.v) represents a simple MODBUS RTU loopback interface. It echoes transmitted tx_data on the rx_data output when both tx_enable and rx_enable are active. This behavior is ideal for validating the correctness of transmitted and received frames, and it helps demonstrate:
+---
 
-    Correct frame structure
+## 🔧 How to Run Simulation
 
-    Accurate CRC generation/validation
+1. Install dependencies:
+   - Python ≥ 3.10
+   - cocotb ≥ 1.7
+   - Icarus Verilog
 
-    Clean RX/TX signal interaction
+2. Run the test:
+   ```bash
+   make MODULE=tb.test_modbus_advanced
 
-#How to Run the Test
-Prerequisites
+📝 Generate Report
 
-Ensure the following tools are installed:
-
-    Python 3.10+
-
-    cocotb (≥1.7)
-
-    Icarus Verilog (iverilog)
-
-    pip dependencies from requirements.txt
-
-#Steps to Simulate
-
-# Step 1: Install dependencies
-pip install -r requirements.txt
-
-# Step 2: Run the cocotb test
-make MODULE=tb.test_modbus_advanced
-
-#Generate Test Reports
+After simulation:
 
 python generate_test_report.py
 
-After simulation, detailed results (status, timing, CRC errors, function code coverage) will be saved under:
+    test_reports/test_report.txt – Plain summary
 
-    test_reports/test_report.txt
+    test_reports/test_report.html – Clickable HTML report
 
-    test_reports/test_report.html
+🧪 Design Under Test (DUT)
 
-You can open the HTML file in any browser.
-# Sample Report
+We use tlvhpd1250.v, a simple Verilog module that echoes transmitted frames back. This verifies:
 
-Includes:
+    Frame integrity
 
-    Status of all test cases
+    CRC correctness
 
-    Frame match results
+    Timing & synchronization
 
-    CRC validation
+You can replace this with your own MODBUS IP!
+🧠 Why Use This?
 
-    Function code coverage summary
+    Modular: Plug-and-play with any MODBUS RTL design
 
-📄 License
+    Accurate: Includes proper CRC validation
 
-This project is licensed under the MIT License.
+    Complete: Scoreboard + Coverage built in
 
-#Acknowledgements
-Mentor: Vijayvithal Jahagirdar
+    Open: MIT License for unrestricted use
+
+👨‍💻 Author
+
+
+Developed under the guidance of Vijayvithal Jahagirdar
+📜 License
+
+MIT License – Free to use, modify, and distribute.
