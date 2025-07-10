@@ -1,85 +1,95 @@
-# cocotbext-MODBUS-RTU
+with open("README.md", "w") as f:
+    f.write("""# cocotbext-MODBUS-RTU
 
-A reusable **Verification IP (VIP)** for testing **MODBUS RTU protocol** using the [Cocotb](https://github.com/cocotb/cocotb) framework. This VIP provides a full suite including driver, monitor, scoreboard, CRC checker, and functional coverage to validate MODBUS RTU communication.
-
----
-
-## ✅ What This VIP Does
-
-- Sends and receives MODBUS RTU frames
-- Checks CRC correctness
-- Compares actual vs expected results
-- Tracks which MODBUS functions are used
-- Supports integration with any MODBUS-compliant DUT
+A modular and reusable **Verification IP (VIP)** for verifying MODBUS RTU protocol implementations using the [cocotb](https://github.com/cocotb/cocotb) Python-based verification framework. This VIP includes drivers, monitors, scoreboards, coverage, and CRC validation components.
 
 ---
 
-## 📁 Project Structure
+## 🚀 Features
+
+- 📦 **Modbus Frame Builder**: Constructs complete RTU frames with CRC.
+- 📡 **Driver**: Sends Modbus frames to DUT.
+- 👁️ **Monitor**: Captures DUT responses and filters invalid data.
+- 🧮 **Scoreboard**: Compares expected vs actual frames.
+- ✅ **CRC Checker**: Detects integrity issues in received frames.
+- 📊 **Coverage**: Tracks function code usage.
+- 🔗 **DUT Example**: Includes `tlvhpd1250.v` - a Verilog loopback model.
+
+---
+
+## 📁 Directory Structure
 
 cocotbext-modbus/
-├── cocotbext/modbus/ # VIP modules
-│ ├── modbus_driver.py # Sends frames
-│ ├── modbus_monitor.py # Captures DUT output
-│ ├── modbus_scoreboard.py # Verifies results
-│ ├── modbus_coverage.py # Logs function code usage
-│ ├── modbus_rtu.py # Frame + CRC generator
-│ ├── error_handling.py # Checks CRC integrity
-│ └── modbus_bus.py # Signal abstraction
-├── sim/tlvhpd1250.v # Example DUT (loopback)
-├── tb/test_modbus_advanced.py# Main test case
-├── generate_test_report.py # Report generator
-├── test_reports/ # Stores HTML + text reports
-└── Makefile # Build + simulate
+├── cocotbext/
+│ └── modbus/
+│ ├── modbus_driver.py
+│ ├── modbus_monitor.py
+│ ├── modbus_scoreboard.py
+│ ├── modbus_coverage.py
+│ ├── modbus_rtu.py
+│ ├── error_handling.py
+│ └── modbus_bus.py
+├── sim/
+│ └── tlvhpd1250.v # DUT: Simple loopback interface
+├── tb/
+│ └── test_modbus_advanced.py # Full integration test
+├── Makefile
+├── generate_test_report.py
+├── requirements.txt
+└── test_reports/ # Auto-generated reports
+
+Always show details
 
 
 ---
 
-## 🔧 How to Run Simulation
+## 🔧 How to Use
 
-1. Install dependencies:
-   - Python ≥ 3.10
-   - cocotb ≥ 1.7
-   - Icarus Verilog
+### 1. **Install Prerequisites**
 
-2. Run the test:
-   ```bash
-   make MODULE=tb.test_modbus_advanced
+```bash
+pip install -r requirements.txt         # Cocotb dependencies
+sudo apt install iverilog               # Icarus Verilog (simulator)
 
-📝 Generate Report
+2. Build & Run Simulation
 
-After simulation:
+Always show details
+
+make MODULE=tb.test_modbus_advanced
+
+    Compiles tlvhpd1250.v
+
+    Runs test_modbus_rtu_full_verification
+
+    Logs simulation output & generates results.xml
+
+3. Generate Test Report
+
+Always show details
 
 python generate_test_report.py
 
-    test_reports/test_report.txt – Plain summary
+    Creates:
 
-    test_reports/test_report.html – Clickable HTML report
+        test_reports/test_report.txt
 
-🧪 Design Under Test (DUT)
+        test_reports/test_report.html
 
-We use tlvhpd1250.v, a simple Verilog module that echoes transmitted frames back. This verifies:
+You can open the .html report in a browser to view a summary and detailed results.
+📐 DUT (Design Under Test)
 
-    Frame integrity
+tlvhpd1250.v is a Verilog module used to test MODBUS TX-RX loopback. It mirrors transmitted bytes to the receiver, enabling complete CRC and framing validation.
 
-    CRC correctness
+This DUT is a placeholder—you can integrate any MODBUS-compliant RTL for full validation.
+📝 License
 
-    Timing & synchronization
+This project is licensed under the MIT License.
+🙏 Acknowledgements
 
-You can replace this with your own MODBUS IP!
-🧠 Why Use This?
+    Vijayvithal Jahagirdar — for mentoring and continuous support
 
-    Modular: Plug-and-play with any MODBUS RTL design
+    Team @ Internship — for building, debugging, and testing the entire VIP
+    """)
 
-    Accurate: Includes proper CRC validation
+Always show details
 
-    Complete: Scoreboard + Coverage built in
-
-    Open: MIT License for unrestricted use
-
-👨‍💻 Author
-
-
-Developed under the guidance of Vijayvithal Jahagirdar
-📜 License
-
-MIT License – Free to use, modify, and distribute.
