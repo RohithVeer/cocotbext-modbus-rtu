@@ -16,7 +16,7 @@ The DUT (`tlvhpd1250.v`) is a **loopback-based module** that mirrors transmitted
 - Simplify CRC verification and byte-level frame validation.
 - Ensure synchronized send-receive paths for accurate scoreboard matching.
 
-> This loopback strategy effectively verifies the full Modbus transaction pipeline without needing a complex slave DUT.
+This loopback strategy effectively verifies the full Modbus transaction pipeline without needing a complex slave DUT.
 
 ---
 
@@ -75,13 +75,17 @@ cocotbext-modbus/
 
 * **Frame Sent**: `[1, 3, 0, 2, 112, 25]`
 * **Frame Captured**: `[1, 3, 0, 2, 112, 25]`
-* **CRC**: ✔ Passed
+ HEAD
+* **CRC**:  Passed
+
+* **CRC**:  Passed
+a219a17
 * **Function Code 0x03**: Covered once
 * **Simulation Status**: PASS
 
 ---
 
-## ⚙ Requirements
+##  Requirements
 
 * Python 3.10+
 * cocotb ≥ 1.7
