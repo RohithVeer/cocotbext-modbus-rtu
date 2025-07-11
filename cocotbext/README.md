@@ -1,95 +1,110 @@
-with open("README.md", "w") as f:
-    f.write("""# cocotbext-MODBUS-RTU
+---
 
-A modular and reusable **Verification IP (VIP)** for verifying MODBUS RTU protocol implementations using the [cocotb](https://github.com/cocotb/cocotb) Python-based verification framework. This VIP includes drivers, monitors, scoreboards, coverage, and CRC validation components.
+````
+# cocotbext-MODBUS-RTU
+
+A reusable **Verification IP (VIP)** for validating MODBUS RTU protocol behavior using the [cocotb](https://github.com/cocotb/cocotb) Python-based testbench framework. This VIP simulates real MODBUS transactions and checks frame integrity, CRC correctness, and functional coverage.
 
 ---
 
-## 🚀 Features
+## Why `tlvhpd1250.v`?
 
-- 📦 **Modbus Frame Builder**: Constructs complete RTU frames with CRC.
-- 📡 **Driver**: Sends Modbus frames to DUT.
-- 👁️ **Monitor**: Captures DUT responses and filters invalid data.
-- 🧮 **Scoreboard**: Compares expected vs actual frames.
-- ✅ **CRC Checker**: Detects integrity issues in received frames.
-- 📊 **Coverage**: Tracks function code usage.
-- 🔗 **DUT Example**: Includes `tlvhpd1250.v` - a Verilog loopback model.
+The DUT (`tlvhpd1250.v`) is a **loopback-based module** that mirrors transmitted data back to the receiver. This design was intentionally chosen to:
+
+- Provide a controlled echo environment to validate frame consistency.
+- Mimic slave behavior without implementing full MODBUS state machines.
+- Simplify CRC verification and byte-level frame validation.
+- Ensure synchronized send-receive paths for accurate scoreboard matching.
+
+> This loopback strategy effectively verifies the full Modbus transaction pipeline without needing a complex slave DUT.
 
 ---
 
-## 📁 Directory Structure
+##  VIP Features
 
+- **Driver**: Sends MODBUS RTU frames with valid CRC.
+- **Monitor**: Captures received data and filters undefined states.
+- **Scoreboard**: Compares expected and actual frames.
+- **Error Checker**: Flags CRC mismatches.
+- **Coverage Tracker**: Reports usage of function codes.
+
+---
+
+##  Simulation Flow
+
+1. **Build & Run Test**
+   ```bash
+   make MODULE=tb.test_modbus_advanced
+````
+
+2. **Generate Test Report**
+
+   ```bash
+   python generate_test_report.py
+   ```
+
+---
+
+##  Project Structure
+
+```
 cocotbext-modbus/
 ├── cocotbext/
-│ └── modbus/
-│ ├── modbus_driver.py
-│ ├── modbus_monitor.py
-│ ├── modbus_scoreboard.py
-│ ├── modbus_coverage.py
-│ ├── modbus_rtu.py
-│ ├── error_handling.py
-│ └── modbus_bus.py
+│   └── modbus/
+│       ├── modbus_driver.py
+│       ├── modbus_monitor.py
+│       ├── modbus_scoreboard.py
+│       ├── modbus_coverage.py
+│       ├── modbus_rtu.py
+│       ├── error_handling.py
+│       └── modbus_bus.py
 ├── sim/
-│ └── tlvhpd1250.v # DUT: Simple loopback interface
+│   └── tlvhpd1250.v               # Loopback-based DUT
 ├── tb/
-│ └── test_modbus_advanced.py # Full integration test
-├── Makefile
+│   └── test_modbus_advanced.py    # Integrated testbench
 ├── generate_test_report.py
+├── test_reports/                  # Reports directory
+├── Makefile
 ├── requirements.txt
-└── test_reports/ # Auto-generated reports
-
-Always show details
-
+└── README.md
+```
 
 ---
 
-## 🔧 How to Use
+##  Result Highlights
 
-### 1. **Install Prerequisites**
+* **Frame Sent**: `[1, 3, 0, 2, 112, 25]`
+* **Frame Captured**: `[1, 3, 0, 2, 112, 25]`
+* **CRC**: ✔ Passed
+* **Function Code 0x03**: Covered once
+* **Simulation Status**: PASS
+
+---
+
+## ⚙ Requirements
+
+* Python 3.10+
+* cocotb ≥ 1.7
+* Icarus Verilog
+
+Install dependencies:
 
 ```bash
-pip install -r requirements.txt         # Cocotb dependencies
-sudo apt install iverilog               # Icarus Verilog (simulator)
+pip install -r requirements.txt
+```
 
-2. Build & Run Simulation
+---
 
-Always show details
-
-make MODULE=tb.test_modbus_advanced
-
-    Compiles tlvhpd1250.v
-
-    Runs test_modbus_rtu_full_verification
-
-    Logs simulation output & generates results.xml
-
-3. Generate Test Report
-
-Always show details
-
-python generate_test_report.py
-
-    Creates:
-
-        test_reports/test_report.txt
-
-        test_reports/test_report.html
-
-You can open the .html report in a browser to view a summary and detailed results.
-📐 DUT (Design Under Test)
-
-tlvhpd1250.v is a Verilog module used to test MODBUS TX-RX loopback. It mirrors transmitted bytes to the receiver, enabling complete CRC and framing validation.
-
-This DUT is a placeholder—you can integrate any MODBUS-compliant RTL for full validation.
-📝 License
+##  License
 
 This project is licensed under the MIT License.
-🙏 Acknowledgements
 
-    Vijayvithal Jahagirdar — for mentoring and continuous support
+---
 
-    Team @ Internship — for building, debugging, and testing the entire VIP
-    """)
+##  Acknowledgements
 
-Always show details
+* Technical Mentorship-Guided by [Vijayvithal Jahagirdar](https://github.com/jahagirdar)
+* Based on the [cocotb](https://github.com/cocotb/cocotb) testbench ecosystem
+
+
 
