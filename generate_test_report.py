@@ -1,3 +1,10 @@
+"""
+IS4310-based Modbus RTU VIP Test Report Generator
+
+This script parses simulation results and generates both text and HTML reports
+for IS4310_1250-based Modbus RTU VIP verification.
+"""
+
 import os
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -27,13 +34,13 @@ def parse_results(xml_file):
 def generate_txt_report(tests):
     os.makedirs(REPORT_DIR, exist_ok=True)
     with open(REPORT_FILE_TXT, "w") as f:
-        f.write("Phase 2 - MODBUS RTU VIP Test Report\n")
+        f.write("IS4310-based MODBUS RTU VIP Test Report\n")
         f.write(f"Generated on: {datetime.now()}\n")
         f.write("=" * 70 + "\n")
-        f.write("Phase Summary:\n")
-        f.write("Phase 2 focuses on complete end-to-end verification:\n")
+        f.write("Summary:\n")
+        f.write("This report covers end-to-end verification of the IS4310_1250 Modbus RTU VIP:\n")
         f.write(" - Driver sends Modbus frame with address, function code, and CRC\n")
-        f.write(" - Monitor captures echoed response and checks integrity\n")
+        f.write(" - Monitor captures and checks response\n")
         f.write(" - Scoreboard compares frames and CRC\n")
         f.write(" - Coverage and error checks ensure protocol compliance\n")
         f.write("=" * 70 + "\n\n")
@@ -58,7 +65,7 @@ def generate_txt_report(tests):
 def generate_html_report(tests):
     os.makedirs(REPORT_DIR, exist_ok=True)
     with open(REPORT_FILE_HTML, "w") as f:
-        f.write("<html><head><title>Phase 2 - MODBUS RTU VIP Test Report</title>\n")
+        f.write("<html><head><title>IS4310-based MODBUS RTU VIP Test Report</title>\n")
         f.write("<style>")
         f.write("body { font-family: Arial; padding: 20px; }")
         f.write("table { border-collapse: collapse; width: 100%; }")
@@ -69,9 +76,9 @@ def generate_html_report(tests):
         f.write(".SKIP { color: orange; font-weight: bold; }")
         f.write("</style></head><body>\n")
 
-        f.write("<h1>Phase 2 - MODBUS RTU VIP Test Report</h1>\n")
+        f.write("<h1>IS4310-based MODBUS RTU VIP Test Report</h1>\n")
         f.write(f"<p><strong>Generated on:</strong> {datetime.now()}</p>\n")
-        f.write("<p>This report summarizes the results of Phase 2, which verifies end-to-end MODBUS RTU communication including CRC validation, signal synchronization, and passive monitoring.</p>\n")
+        f.write("<p>This report summarizes the results of IS4310_1250 Modbus RTU verification, including CRC validation, signal synchronization, and passive monitoring.</p>\n")
 
         f.write("<h2>Test Results</h2>\n")
         f.write("<table>\n")
@@ -93,7 +100,7 @@ def generate_html_report(tests):
 
 if __name__ == "__main__":
     if not os.path.exists(RESULTS_XML):
-        print(f"[ERROR] {RESULTS_XML} not found. Please run `make` first.")
+        print(f"[ERROR] {RESULTS_XML} not found. Please run make first.")
     else:
         test_results = parse_results(RESULTS_XML)
         generate_txt_report(test_results)

@@ -18,6 +18,7 @@ compute_crc = calculate_crc
 def build_modbus_frame(addr: int, func: int, data: list[int]) -> bytes:
     """
     Construct a complete Modbus RTU frame with address, function code, data, and CRC.
+    All fields are parameterized for reconfigurable VIP.
     """
     payload = bytes([addr, func] + data)
     crc = calculate_crc(payload)

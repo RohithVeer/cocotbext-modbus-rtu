@@ -2,21 +2,30 @@ import cocotb
 from cocotb.triggers import Timer
 from cocotbext.modbus.modbus_rtu import calculate_crc
 
-
 class ModbusRTUDriver:
-    def __init__(self, dut):
-        self.dut = dut  # Store reference to DUT interface
+    """
+    IS4310-based, reconfigurable Modbus RTU Driver.
+    """
+    def __init__(self, dut, config=None):
+        self.dut = dut
+        self.config = config or {}
+        self.default_baud_delay = self.config.get('baud_delay', 10)
 
-    async def send_frame(self, address: int, function_code: int, data_bytes: list, baud_delay: int = 10):
-        frame = [address, function_code] + data_bytes  # Build Modbus frame (without CRC)
-        crc = calculate_crc(bytes(frame))  # Compute CRC checksum
-        full_frame = frame + list(crc)  # Append CRC bytes
-        
-        self.dut.tx_enable.value = 1  # Enable TX for data transmission
-        for byte in full_frame:  # Transmit frame byte-by-byte
-            self.dut.tx_data.value = byte  # Assign byte value to DUT TX port
-            await Timer(baud_delay, units="us")  # Simulate baud rate delay
-        self.dut.tx_enable.value = 0  # Disable TX after sending
+    async def send_frame(self, address: int = None, function_code: int = None, data_bytes: list = None, baud_delay: int = None):
+        address = address if address is not None else self.config.get('address', 1)
+        function_code = function_code if function_code is not None else self.config.get('function_code', 0x03)
+        data_bytes = data_bytes if data_bytes is not None else self.config.get('data_bytes', [0x00, 0x02])
+        baud_delay = baud_delay if baud_delay is not None else self.default_baud_delay
 
-        cocotb.log.info(f"Driver sent frame: {full_frame}")  # Log transaction details
+        frame = [address, function_code] + data_bytes
+        crc = calculate_crc(bytes(frame))
+        full_frame = frame + list(crc)
+
+        self.dut.tx_enable.value = 1
+        for byte in full_frame:
+            self.dut.tx_data.value = byte
+            await Timer(baud_delay, units="us")
+        self.dut.tx_enable.value = 0
+
+        cocotb.log.info(f"Driver sent frame: {full_frame}")
 

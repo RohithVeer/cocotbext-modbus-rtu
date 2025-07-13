@@ -3,12 +3,17 @@ from cocotb.triggers import Timer
 from cocotb.binary import BinaryValue
 
 class ModbusRTUMonitor:
-    def __init__(self, dut):
+    """
+    IS4310-based, reconfigurable Modbus RTU Monitor.
+    """
+    def __init__(self, dut, config=None):
         self.dut = dut
+        self.config = config or {}
         self.received_frames = []
 
-    async def capture_frame(self, expected_length: int, baud_delay: int = 100):
-        """Capture Modbus frame ignoring 'x'/'z' and waiting for non-zero start."""
+    async def capture_frame(self, expected_length: int = None, baud_delay: int = None):
+        expected_length = expected_length if expected_length is not None else self.config.get('frame_length', 6)
+        baud_delay = baud_delay if baud_delay is not None else self.config.get('baud_delay', 100)
         self.dut.rx_enable.value = 1
         frame = []
 

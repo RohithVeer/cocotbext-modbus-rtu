@@ -1,12 +1,133 @@
 Metadata-Version: 2.1
 Name: cocotbext-modbus
 Version: 0.1.0
-Summary: Reusable VIP for Modbus RTU Protocol using Cocotb
-Home-page: UNKNOWN
+Summary: Reusable Verification IP for MODBUS RTU Protocol using Cocotb
+Home-page: https://github.com/yourusername/cocotbext-modbus
 Author: Rohith Mudigonda
-Author-email: your.email@example.com
+Author-email: rohith.mudigonda@example.com
 License: UNKNOWN
 Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
 
-UNKNOWN
+---
+
+````
+# cocotbext-MODBUS-RTU
+
+A reusable **Verification IP (VIP)** for validating MODBUS RTU protocol behavior using the [cocotb](https://github.com/cocotb/cocotb) Python-based testbench framework. This VIP simulates real MODBUS transactions and checks frame integrity, CRC correctness, and functional coverage.
+
+---
+
+## Why `tlvhpd1250.v`?
+
+The DUT (`tlvhpd1250.v`) is a **loopback-based module** that mirrors transmitted data back to the receiver. This design was intentionally chosen to:
+
+- Provide a controlled echo environment to validate frame consistency.
+- Mimic slave behavior without implementing full MODBUS state machines.
+- Simplify CRC verification and byte-level frame validation.
+- Ensure synchronized send-receive paths for accurate scoreboard matching.
+
+This loopback strategy effectively verifies the full Modbus transaction pipeline without needing a complex slave DUT.
+
+---
+
+##  VIP Features
+
+- **Driver**: Sends MODBUS RTU frames with valid CRC.
+- **Monitor**: Captures received data and filters undefined states.
+- **Scoreboard**: Compares expected and actual frames.
+- **Error Checker**: Flags CRC mismatches.
+- **Coverage Tracker**: Reports usage of function codes.
+
+---
+
+##  Simulation Flow
+
+1. **Build & Run Test**
+   ```bash
+   make MODULE=tb.test_modbus_advanced
+````
+
+2. **Generate Test Report**
+
+   ```bash
+   python generate_test_report.py
+   ```
+
+---
+
+##  Project Structure
+
+```
+cocotbext-modbus/
+├── cocotbext/
+│   └── modbus/
+│       ├── modbus_driver.py
+│       ├── modbus_monitor.py
+│       ├── modbus_scoreboard.py
+│       ├── modbus_coverage.py
+│       ├── modbus_rtu.py
+│       ├── error_handling.py
+│       └── modbus_bus.py
+├── sim/
+│   └── tlvhpd1250.v               # Loopback-based DUT
+├── tb/
+│   └── test_modbus_advanced.py    # Integrated testbench
+├── generate_test_report.py
+├── test_reports/                  # Reports directory
+├── Makefile
+├── requirements.txt
+└── README.md
+```
+
+---
+
+##  Result Highlights
+
+* **Frame Sent**: `[1, 3, 0, 2, 112, 25]`
+* **Frame Captured**: `[1, 3, 0, 2, 112, 25]`
+ HEAD
+* **CRC**:  Passed
+
+* **CRC**:  Passed
+a219a17
+* **Function Code 0x03**: Covered once
+* **Simulation Status**: PASS
+
+---
+
+##  Requirements
+
+* Python 3.10+
+* cocotb ≥ 1.7
+* Icarus Verilog
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+##  License
+
+This project is licensed under the MIT License.
+
+---
+
+##  Acknowledgements
+
+* Technical Mentorship-Guided by [Vijayvithal Jahagirdar](https://github.com/jahagirdar)
+* Based on the [cocotb](https://github.com/cocotb/cocotb) testbench ecosystem
+
+
+
+
 

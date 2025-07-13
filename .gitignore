@@ -1,5 +1,11 @@
-__pycache__/
+# Cocotb & ssimulation build files
 sim_build/
 *.vcd
+*.vvp
+*.log
+*.pyc
+_pycache_/
+*.save
 results.xml
 test_reports/
+.env/

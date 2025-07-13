@@ -1,10 +1,12 @@
 import cocotb
-from cocotbext.modbus.modbus_rtu import calculate_crc
 
 class ModbusScoreboard:
+    """
+    Reconfigurable scoreboard for Modbus RTU frames (IS4310-based VIP).
+    """
     def __init__(self):
-        self.expected = []  # Store expected Modbus transactions
-        self.received = []  # Store received DUT responses
+        self.expected = []
+        self.received = []
 
     def add_expected(self, frame: list):
         self.expected.append(frame)
