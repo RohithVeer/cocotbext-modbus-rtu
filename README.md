@@ -1,169 +1,117 @@
+# cocotbext-modbus-rtu
 
-from pathlib import Path
-
-# Create the README.md content
-readme_content = """
-# cocotbext-MODBUS-RTU
-
-A reusable **Verification IP (VIP)** developed using [cocotb](https://github.com/cocotb/cocotb) for validating **MODBUS RTU protocol** on a Verilog-based DUT. This VIP simulates real-world Modbus communication between a master and a slave, with CRC checks, coverage sampling, scoreboard comparison, and error handling.
+A reusable **Verification IP (VIP)** for validating MODBUS RTU protocol behavior using the [cocotb](https://github.com/cocotb/cocotb) Python-based testbench framework. This VIP simulates real MODBUS transactions and checks frame integrity, CRC correctness, and functional coverage.
 
 ---
 
-##  Why IS4310_1250?
+##  Why `IS4310_1250.v`?
 
-The chosen DUT for simulation is `IS4310_1250`, a simplified Modbus-compatible RTL model designed to mimic core data reception and transmission behavior. This IC model was selected based on project needs for internal loopback testing and minimalistic design for verifying Modbus features.
+The DUT (`IS4310_1250.v`) was selected to simulate basic Modbus functionality with synchronized `tx` and `rx` paths. This IC model echoes transmitted data when both `tx_enable` and `rx_enable` are active, ideal for validating VIP transaction and CRC checks.
 
 ---
 
-##  Project Structure
+##  Directory Structure
 
+```
 cocotbext-modbus-rtu/
 │
 ├── cocotbext/
-│ └── modbus/
-│ ├── init.py
-│ ├── modbus_rtu.py # CRC, frame builder
-│ ├── modbus_driver.py # Drives frames into DUT
-│ ├── modbus_monitor.py # Captures responses
-│ ├── modbus_scoreboard.py # Frame comparison
-│ ├── modbus_coverage.py # Function code coverage
-│ ├── modbus_bus.py # Port mapping
-│ └── error_handling.py # CRC error checker
-│
-├── tb/
-│ └── test_modbus_advanced.py # Full integration test
+│   └── modbus/
+│       ├── __init__.py
+│       ├── modbus_rtu.py
+│       ├── modbus_driver.py
+│       ├── modbus_monitor.py
+│       ├── modbus_scoreboard.py
+│       ├── modbus_coverage.py
+│       ├── error_handling.py
 │
 ├── sim/
-│ ├── IS4310_1250.v # RTL model of DUT
-│ └── tb.v # Verilog testbench (for GTKWave)
+│   ├── IS4310_1250.v         # DUT (echo IC)
+│   └── tb.v                  # Testbench for GTKWave
+│
+├── tb/
+│   └── test_modbus_advanced.py
 │
 ├── test_reports/
-│ ├── test_report.txt # Text summary (auto-generated)
-│ └── test_report.html # HTML summary (auto-generated)
+│   └── [auto-generated reports]
 │
-├── generate_test_report.py # Post-simulation report generator
-├── Makefile # Cocotb + Icarus Makefile
-├── README.md # ← This file
-├── results.xml # Cocotb results (auto-generated)
-└── .gitignore # Ignore build and sim artifacts
-
-yaml
-Always show details
-
-Copy
+├── generate_test_report.py
+├── Makefile
+└── README.md
+```
 
 ---
 
+##  Features
 
-##  VIP Features
-
--  **Reusable VIP modules**: Driver, Monitor, Scoreboard, Coverage, CRC Checker  
--  **End-to-End frame checking** with CRC16 integrity validation  
--  **Function code coverage tracking**  
--  **Loopback testing** on IS4310_1250 RTL DUT  
--  **Verilog + Python hybrid co-simulation using Cocotb**  
--  **HTML/Text Test Reports** post-simulation  
--  **Modular and scalable structure** for reuse in other Modbus projects  
+- Full Modbus RTU transaction emulation.
+- Real-time CRC16 validation.
+- Transaction coverage logging per function code.
+- Passive monitoring and driver scoreboarding.
+- Compatibility with Icarus Verilog and GTKWave.
 
 ---
 
+##  How to Use
 
-##  How to Run Simulation
-
-###  Requirements
-
-- Python ≥ 3.7
-- [Cocotb](https://github.com/cocotb/cocotb) ≥ 1.7
-- Icarus Verilog (`iverilog`)
-- GTKWave (`gtkwave`)
-
----
-
-
-###  Installation
+###  1. Build & Simulate
 
 ```bash
-# Clone repo
-git clone https://github.com/RohithVeer/cocotbext-modbus-rtu.git
-cd cocotbext-modbus-rtu
-
-# Install as editable package
-pip install -e .
- Simulation Steps
-🔹 Cocotb Test (Full Verification)
-bash
-Always show details
-
-Copy
 make
-This command will:
+```
 
-Compile the DUT (IS4310_1250.v)
+###  2. Run the Icarus/Native Verilog testbench (non-cocotb)
 
-Run test from tb.test_modbus_advanced
-
-Log frame TX/RX activity
-
-Validate CRC
-
-Generate coverage
-
-Write results.xml
-
-🔹 View Waveform in GTKWave (Optional)
-bash
-Always show details
-
-Copy
+```bash
 make view_waveform
-Tip: Add internal DUT signals to VCD using $dumpvars(0, tb.dut); inside tb.v.
+```
 
-🔹 Generate Reports
-bash
-Always show details
+###  3. Generate Test Reports
 
-Copy
-python generate_test_report.py
- test_reports/test_report.txt
+```bash
+python3 generate_test_report.py
+```
 
- test_reports/test_report.html
+###  4. Clean the Workspace
 
- Test Behavior Summary
-TX sends: Address = 2, Function Code = 0x04, Data = [1, 5]
+```bash
+make clean
+```
 
-CRC is appended automatically.
+---
 
-RX echoes the frame (loopback).
+##  Testcase Flow
 
-Monitor captures and Scoreboard compares it.
+The testcase `test_modbus_rtu_full_verification` does the following:
 
-Coverage logs function code count.
+1. Initializes driver, monitor, scoreboard, and coverage.
+2. Sends a Modbus frame from the driver.
+3. Monitor passively captures the echoed frame.
+4. CRC is verified and logged.
+5. Scoreboard matches expected vs received.
+6. Functional coverage and logs are generated.
 
-CRC is validated.
+---
 
-Assertion checks ensure DUT behavior.
+##  Acknowledgements
 
- Sample Log Snippet
-vbnet
-Always show details
+Special thanks to [@jahagirdar](https://github.com/jahagirdar) for valuable mentorship and guidance throughout the project.
 
-Copy
-TX byte: 2
-TX byte: 4
-TX byte: 1
-TX byte: 5
-TX byte: 129
-TX byte: 206
-Monitor captured frame: [2, 4, 1, 5, 129, 206]
-CRC Validation PASSED.
-Coverage: Function Code 0x04 count = 1
- Acknowledgements
-Mentor: @jahagirdar – 
+---
 
-Inspired by: cocotbext
+##  Notes
 
- Author
-Rohith Mudigonda
+- Developed using [cocotb v1.8.1](https://github.com/cocotb/cocotb).
+- Tested on Ubuntu 22.04 LTS with Python 3.10 and GTKWave.
+- IS4310_1250.v is a placeholder IC to test Modbus frame behavior.
 
- License
-This project is licensed under the MIT License. See LICENSE file for details.
+---
+
+##  Installation (as Python Package)
+
+To install and use as a package:
+
+```bash
+pip install -e .
+```
+
