@@ -1,10 +1,14 @@
 # cocotbext-modbus-rtu
 
-A reusable **Verification IP (VIP)** for validating MODBUS RTU protocol behavior using the [cocotb](https://github.com/cocotb/cocotb) Python-based testbench framework. This VIP simulates real MODBUS transactions and checks frame integrity, CRC correctness, and functional coverage.
+A reusable **Verification IP (VIP)** for validating MODBUS RTU protocol behavior using the [cocotb](https://github.com/cocotb/cocotb) Python-based testbench framework. This VIP simulates MODBUS transactions, checks frame integrity, CRC correctness, and functional coverage.
 
-## Why IS4310_1250.v?
+---
 
-The DUT (`IS4310_1250.v`) was selected to simulate basic Modbus functionality with synchronized `tx` and `rx` paths. This IC model echoes transmitted data when both `tx_enable` and `rx_enable` are active, making it ideal for validating VIP transaction and CRC checks.
+## Why `IS4310_1250.v`?
+
+The DUT (`IS4310_1250.v`) was selected to simulate basic Modbus functionality with synchronized `tx` and `rx` paths. This IC echoes transmitted data when both `tx_enable` and `rx_enable` are active — ideal for validating VIP transaction and CRC checks.
+
+---
 
 ## Directory Structure
 
@@ -31,63 +35,74 @@ cocotbext-modbus-rtu/
 └── README.md
 ```
 
+---
+
 ## Features
 
 - Full Modbus RTU transaction emulation
 - Real-time CRC16 validation
-- Transaction coverage logging per function code
-- Passive monitoring and driver scoreboarding
+- Function code transaction coverage
+- Passive monitor and driver scoreboard
 - Compatible with Icarus Verilog and GTKWave
+
+---
 
 ## How to Use
 
-### 1. Build & Simulate
+### 1. Install Locally (editable)
+
+```bash
+pip install -e .
+```
+
+### 2. Run Cocotb Test
 
 ```bash
 make
 ```
 
-### 2. Run the Native Verilog Testbench (non-cocotb)
+### 3. View Native Waveform
 
 ```bash
 make view_waveform
 ```
 
-### 3. Generate Test Reports
+### 4. Generate Test Report
 
 ```bash
 python3 generate_test_report.py
 ```
 
-### 4. Clean the Workspace
+### 5. Clean Simulation Artifacts
 
 ```bash
 make clean
 ```
 
-## Testcase Flow
+---
 
-The testcase `test_modbus_rtu_full_verification` does the following:
+## Test Flow
 
-1. Initializes driver, monitor, scoreboard, and coverage
-2. Sends a Modbus frame from the driver
-3. Monitor captures the echoed frame
+The test `test_modbus_rtu_full_verification` performs:
+
+1. Setup of monitor, driver, coverage, and scoreboard
+2. Sends Modbus request frame
+3. Echoed frame received by monitor
 4. CRC is verified
-5. Scoreboard matches expected vs received
-6. Functional coverage is logged
+5. Scoreboard compares expected vs received
+6. Coverage is logged
+
+---
 
 ## Acknowledgements
 
-Special thanks to [@jahagirdar](https://github.com/jahagirdar) for mentorship throughout the project.
+Special thanks to [@jahagirdar](https://github.com/jahagirdar) for mentoring and guidance throughout the VIP development process.
+
+---
 
 ## Notes
 
-- Developed using [cocotb v1.8.1](https://github.com/cocotb/cocotb)
-- Tested on Ubuntu 22.04 LTS with Python 3.10 and GTKWave
-- `IS4310_1250.v` is a placeholder IC to test Modbus frame behavior
+- Developed with cocotb v1.8.1
+- Target: Python 3.10 on Ubuntu 22.04
+- DUT: IS4310_1250.v (Modbus echo IC for testing)
 
-## Installation (as Python Package)
-
-```bash
-pip install -e .
-```
